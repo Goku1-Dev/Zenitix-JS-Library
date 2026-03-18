@@ -2,12 +2,8 @@ import { effect, onMount, onUnmount } from "../../src/index";
 import { count, logs, increment, reset, addLog } from "./EffectDemo.state";
 
 export default function EffectDemo() {
-  effect(() => {
-    document.title = `Count: ${count}`;
-    addLog(`Effect ran: document.title updated to ${count}`);
-  });
-
   onMount(() => {
+    effect(() => {});
     addLog("Component mounted");
     return () => console.log("cleanup");
   });

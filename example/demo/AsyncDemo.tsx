@@ -78,7 +78,7 @@ export default function AsyncDemo() {
             <div class="monitor-meta">
               <div class="monitor-tag">
                 <div class="monitor-pulse" />
-                <span class="monitor-tag-text">Telemetry Monitor</span>
+                  <span class="monitor-tag-text">Telemetry Monitor</span>
               </div>
               <div class="monitor-title">Async Data Stream</div>
             </div>

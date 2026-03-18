@@ -16,6 +16,7 @@ import DerivedDemo from "./DerivedDemo";
 import EffectDemo from "./EffectDemo";
 import AsyncDemo from "./AsyncDemo";
 import StateDemo from "./StateDemo";
+import WhenDemo from "./WhenDemo";
 
 const modules = [
   { id: "signals", title: "Signals",       desc: "Atomic state primitives",   component: SignalsDemo },
@@ -25,6 +26,7 @@ const modules = [
   { id: "effects", title: "Effects",       desc: "Side effects & lifecycle",  component: EffectDemo  },
   { id: "async",   title: "Async/Suspense",desc: "Integrated async flow",     component: AsyncDemo   },
   { id: "state",   title: "State Guard",   desc: "Mutation protection",       component: StateDemo   },
+  { id: "When",   title: "When / Whenever",   desc: "Lifecycle & Conditions",       component: WhenDemo   },
 ];
 
 export default function DemoPage() {

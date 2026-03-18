@@ -15,73 +15,104 @@ export function transformStateFile(code: string, filename: string): string {
   });
 
   if (result?.code) {
-    // Inject the notify import if we transformed anything
-    if (result.code.includes("__notifySignal(")) {
-       return `import { notifySignal as __notifySignal } from '@engine/index';\n` + result.code;
+    let finalCode = result.code;
+    const imports = [];
+    if (finalCode.includes("__notifySignal(")) {
+      imports.push("notifySignal as __notifySignal");
+  }
+  if (finalCode.includes("__trackState(")) {
+      imports.push("trackState as __trackState");
     }
-    return result.code;
+    if (imports.length > 0) {
+      return `import { ${imports.join(", ")} } from '@engine/index';\n` + finalCode;
+    }
+    return finalCode;
   }
   return code;
 }
 
 function stateAssignmentsPlugin({ types: t }: any) {
+   // Define helper for identifier transformation to use in both visitors
+    const transformId = (path: any, state: any) => {
+      if (!state.exportedVars.has(path.node.name)) return;
+      if (path.parentPath.isVariableDeclarator({ id: path.node })) return;
+      if (path.parentPath.isAssignmentExpression({ left: path.node })) return;
+      if (path.parentPath.isUpdateExpression({ argument: path.node })) return;
+      if (t.isMemberExpression(path.parent) && path.parent.property === path.node && !path.parent.computed) return;
+      if (t.isObjectProperty(path.parent) && path.parent.key === path.node && !path.parent.computed) return;
+      if (path.parentPath.isFunctionDeclaration()) return;
+      if (path.parentPath.isExportSpecifier()) return;
+      
+      if (path.isReferencedIdentifier()) {
+        const filename = state.file.opts.filename;
+        path.replaceWith(
+          t.callExpression(t.identifier("__trackState"), [
+            t.stringLiteral(filename),
+            t.stringLiteral(path.node.name),
+            t.identifier(path.node.name)
+          ])
+        );
+        path.skip();
+      }
+    };
   return {
     visitor: {
-      Program(path: any, state: any) {
-        state.exportedVars = new Set<string>();
-        
-        // Find all exported variables
-        path.traverse({
-          ExportNamedDeclaration(exportPath: any) {
-            const { declaration } = exportPath.node;
-            if (t.isVariableDeclaration(declaration)) {
-              declaration.declarations.forEach((decl: any) => {
-                if (t.isIdentifier(decl.id)) {
-                  state.exportedVars.add(decl.id.name);
-                }
+      Program: {
+        enter(path: any, state: any) {
+          state.exportedVars = new Set<string>();
+          path.node.body.forEach((node: any) => {
+            if (t.isExportNamedDeclaration(node)) {
+              const { declaration } = node;
+              if (t.isVariableDeclaration(declaration)) {
+                declaration.declarations.forEach((decl: any) => {
+                  if (t.isIdentifier(decl.id)) {
+                    state.exportedVars.add(decl.id.name);
+                  }
+                });
+              }
+              }
               });
-            }
-          }
-        });
+        }
       },
       AssignmentExpression(path: any, state: any) {
-        const { left } = path.node;
+        const { left, right } = path.node;
         if (t.isIdentifier(left) && state.exportedVars.has(left.name)) {
-          // Wrap the assignment in a sequence expression: (var = val, __notify(id), var)
-          // Actually, just append it if it's in a block, or wrap it.
-          // Sequence expression is safest for expressions.
-          
-          // However, for simplicity and cross-module sync, it's better to 
-          // wrap it like: ((() => { const res = (left = val); __notify('ID'); return res; })())
-          // But that's heavy.
-          
-          // Let's use sequence expression: (count = 10, __notify('FILE'), count)
-          // Note: FILENAME should be injected into the plugin options.
-          
           const filename = state.file.opts.filename;
+          
+          // Manually traverse the 'right' side to track variables used in the RHS
+          path.get('right').traverse({
+            Identifier(childPath: any) {
+              transformId(childPath, state);
+            }
+          });
+          
           path.replaceWith(
             t.sequenceExpression([
-              path.node,
+              t.assignmentExpression(path.node.operator, left, right),
               t.callExpression(t.identifier("__notifySignal"), [t.stringLiteral(filename), t.stringLiteral(left.name), left]),
               left
             ])
           );
-          path.skip(); // prevent infinite recursion
+          path.skip();
         }
       },
       UpdateExpression(path: any, state: any) {
         const { argument } = path.node;
         if (t.isIdentifier(argument) && state.exportedVars.has(argument.name)) {
           const filename = state.file.opts.filename;
+          
           path.replaceWith(
             t.sequenceExpression([
-              path.node,
+              t.updateExpression(path.node.operator, argument, path.node.prefix),
               t.callExpression(t.identifier("__notifySignal"), [t.stringLiteral(filename), t.stringLiteral(argument.name), argument]),
               argument
             ])
           );
           path.skip();
         }
+      },
+      Identifier(path: any, state: any) {
+        transformId(path, state);
       }
     }
   };

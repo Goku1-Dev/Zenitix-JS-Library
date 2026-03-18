@@ -34,23 +34,25 @@ export default function StateDemo() {
         <div class="demo-section-label">Live Example</div>
         <div class="demo-interactive">
           <div class="monitor-card">
-             <div class="monitor-header">
-               <div>
+             <div class="monitor-card-top">
+               <div class="monitor-meta">
                  <div class="monitor-tag">
                    <div class="monitor-pulse"></div>
                    <span class="monitor-tag-text">Security Monitor</span>
                  </div>
-                 <h3 class="monitor-title">Context Enforcement</h3>
+                 <div class="monitor-title">Context Enforcement</div>
                </div>
-               <button class="demo-btn primary" onClick={() => increment()}>Call Action (Valid)</button>
+               <div class="monitor-actions">
+                 <button class="demo-btn primary" onClick={() => increment()}>Call Action (Valid)</button>
+               </div>
              </div>
              
              <div class="monitor-grid">
-               <div>
+               <div class="monitor-cell">
                   <div class="monitor-label">VALUE MONITOR</div>
                   <div class="monitor-value large">{count}</div>
                </div>
-               <div>
+               <div class="monitor-cell">
                   <div class="monitor-label">WRITE ACCESS</div>
                   <div class="monitor-value accent">PROTECTED</div>
                </div>
