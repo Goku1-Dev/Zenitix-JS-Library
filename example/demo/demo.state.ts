@@ -1,5 +1,5 @@
 export let activeTab = 'signals';
-export let isSidebarOpen = true;
+export let isSidebarOpen = window.innerWidth > 1024;
 export let theme: 'dark' | 'light' = 'dark';
 
 export function setActiveTab(tab: string) {

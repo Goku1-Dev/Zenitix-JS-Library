@@ -961,18 +961,25 @@ code {
 
   .social-link,
   .theme-toggle { padding: 7px 9px; }
+
+  .doc-heading { font-size: 22px; }
+  .doc-body { font-size: 14px; line-height: 1.6; }
 }
 
 @media (max-width: 640px) {
   .monitor-grid      { grid-template-columns: 1fr; }
   .monitor-cell:last-child { border-bottom: none; }
   .monitor-cell      { border-right: none; }
-  .monitor-card-top  { flex-direction: column; }
-  .user-fetch-grid   { grid-template-columns: repeat(2, 1fr); }
+  .monitor-card-top  { flex-direction: column; align-items: flex-start; }
+  .monitor-actions   { width: 100%; justify-content: flex-start; margin-top: 12px; }
+  .demo-btn          { flex: 1; text-align: center; }
+  .user-fetch-grid   { grid-template-columns: 1fr; }
   .component-pair    { flex-direction: column; }
   .sync-divider      { width: 100%; height: 24px; transform: rotate(90deg); }
   .doc-heading       { font-size: 20px; }
-  #demo-header       { padding: 0 14px; }
+  #demo-header       { padding: 0 14px; gap: 8px; }
+  .demo-title-container h2 { font-size: 12px; }
+  .header-actions { gap: 8px; }
   .demo-doc-pane,
   .demo-demo-pane    { padding: 24px 16px; }
 }
