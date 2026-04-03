@@ -26,7 +26,7 @@ export class DashboardLayout extends BaseLayout {
   // new method
   WelcomeMessage() {
     if (!this.user) return null
-    return <p class="welcome" style="margin-bottom: 1rem; color: #475569;">Welcome back {this.user.name}</p>
+    return <p class="welcome" style="margin-bottom: 1rem; color: var(--text-dim);">Welcome back {this.user.name}</p>
   }
 
   constructor() {

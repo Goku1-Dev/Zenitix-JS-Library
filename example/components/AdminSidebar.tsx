@@ -1,1 +1,1 @@
-export default function AdminSidebar() { return <aside class="sidebar admin" style="width: 200px; background: var(--bg-surface); color: var(--primary); font-weight: bold; padding: 1rem; border-right: 1px solid var(--border);">Admin Sidebar</aside> }
+export default function AdminSidebar() { return <aside class="sidebar admin" style="width: 200px; background: var(--bg-card); color: var(--accent); font-weight: bold; padding: 1rem; border-right: 1px solid var(--border);">Admin Sidebar</aside> }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
 
 /* ─── CSS Variables ─── */
 :root {
@@ -18,17 +18,18 @@
   --red-dim:     rgba(255,59,59,.08);
   --font-sans:   'Syne', sans-serif;
   --font-mono:   'Space Mono', monospace;
+  --font-classic: 'Oswald', sans-serif;
   --sidebar-w:   260px;
   --header-h:    60px;
 }
 
 [data-theme="light"] {
-  --bg:          #ffffff;
-  --bg-panel:    #f9fafb;
-  --bg-card:     #ffffff;
-  --bg-hover:    #f3f4f6;
-  --border:      #e5e7eb;
-  --border-mid:  #d1d5db;
+  --bg:          #fbfbfb;
+  --bg-panel:    #f5f5f5;
+  --bg-card:     #f8f8f8;
+  --bg-hover:    #f0f0f0;
+  --border:      #e0e0e0;
+  --border-mid:  #d5d5d5;
   --text:        #111827;
   --text-dim:    #4b5563;
   --text-muted:  #9ca3af;
@@ -41,6 +42,10 @@
 
 /* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-classic);
+}
 
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -93,8 +98,8 @@ body {
 }
 
 .sidebar-header h1 {
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--text);
@@ -125,7 +130,7 @@ body {
   line-height: 1.4;
 }
 
-[data-theme="light"] .demo-badge { color: #f4f1eb; background: var(--accent); }
+[data-theme="light"] .demo-badge { color: #ffffff; background: var(--accent); }
 
 /* Nav items */
 .sidebar-nav {
@@ -238,8 +243,8 @@ body {
 }
 
 .demo-title-container h2 {
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--text);
@@ -361,12 +366,22 @@ body {
 
 /* ─── Typography ─── */
 .doc-heading {
-  font-size: 26px;
-  font-weight: 800;
+  font-family: var(--font-classic);
+  font-size: 32px;
+  font-weight: 700;
   line-height: 1.15;
   letter-spacing: -.01em;
   color: var(--text);
   margin-bottom: 20px;
+}
+
+.demo-doc-pane h1,
+.demo-doc-pane h2,
+.demo-doc-pane h3,
+.demo-doc-pane h4,
+.layout-section h3 {
+  font-family: var(--font-classic);
+  letter-spacing: .02em;
 }
 
 .doc-body {
@@ -389,7 +404,8 @@ code {
 [data-theme="light"] code { color: var(--accent); background: var(--accent-dim); }
 
 .doc-subheading {
-  font-size: 11px;
+  font-family: var(--font-classic);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -559,7 +575,7 @@ code {
   color: #0a0a0a;
 }
 
-[data-theme="light"] .demo-btn.primary { color: #f4f1eb; background: var(--accent); border-color: var(--accent); }
+[data-theme="light"] .demo-btn.primary { color: #ffffff; background: var(--accent); border-color: var(--accent); }
 
 .demo-btn.primary:hover { opacity: .88; }
 

@@ -47,7 +47,9 @@ export function wrapState<T extends Record<string, any>>(
 
     const isClass = typeof initialVal === "function" && /^\s*class[\s{]/.test(initialVal.toString());
 
-    if (typeof initialVal === "function") {
+    if (isClass) {
+      wrapped[key] = initialVal;
+    } else if (typeof initialVal === "function") {
       // Wrap functions in a batch to group state changes
       wrapped[key] = (...args: any[]) => {
         const before: Record<string, any> = {};

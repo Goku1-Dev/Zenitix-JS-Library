@@ -17,7 +17,7 @@ export class ReportsLayout extends DashboardLayout {
 
   // new method — only in reports
   Filters() {
-    return <div class="filters" style="background: #f8fafc; padding: 0.5rem; margin-bottom: 1rem; border: 1px solid #e2e8f0;">Report Filters</div>
+    return <div class="filters" style="background: var(--bg-card); padding: 0.5rem; margin-bottom: 1rem; border: 1px solid var(--border); color: var(--text-dim);">Report Filters</div>
   }
 
   // inherits everything else from DashboardLayout and BaseLayout

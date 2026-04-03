@@ -6,7 +6,7 @@ export default function StateDemo() {
       <div class="demo-doc-pane">
         <div class="demo-section-label">Documentation</div>
         <div style={{ marginBottom: '40px' }}>
-          <h3 style={{ color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>Unidirectional Data Flow</h3>
+          <h3 style={{ fontFamily: 'var(--font-classic)', color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>Unidirectional Data Flow</h3>
           <p style={{ color: 'var(--text-dim)', lineHeight: '1.7', marginBottom: '16px' }}>
             In large-scale applications, the most common source of "impossible bugs" is unpredictable state mutation. When any component can modify any piece of state at any time, tracking down the source of a change becomes a nightmare. Our engine enforces <strong>Strict Unidirectionality</strong> by protecting your state from direct manipulation.
           </p>
@@ -14,7 +14,7 @@ export default function StateDemo() {
             All state objects are wrapped in <strong>Reactive Proxies</strong>. These proxies acting as "gatekeepers" that distinguish between "Contextual Actions" (code inside your <code>.state.ts</code> files) and "External Access" (code in your components).
           </p>
 
-          <h4 style={{ color: 'var(--text)', marginBottom: '12px', fontSize: '16px' }}>Proxy Projection & Protection</h4>
+          <h4 style={{ fontFamily: 'var(--font-classic)', color: 'var(--text)', marginBottom: '12px', fontSize: '16px' }}>Proxy Projection & Protection</h4>
           <p style={{ color: 'var(--text-dim)', lineHeight: '1.7', marginBottom: '16px' }}>
             When you import a state variable into a <code>.tsx</code> file, you are receiving a "projected" view of that state. It is reactive and readable, but any attempt to write to it directly—like <code>count++</code> inside an event handler—will be caught by the engine's security layer.
           </p>
@@ -23,7 +23,7 @@ export default function StateDemo() {
             <strong>The Console Warning:</strong> When a violation occurs, the engine doesn't just block the update; it triggers our <strong>Error Overlay</strong> and logs a detailed stack trace to help you find the offending line immediately.
           </div>
 
-          <h4 style={{ color: 'var(--text)', marginBottom: '12px', fontSize: '16px' }}>The Action Enforcement Pattern</h4>
+          <h4 style={{ fontFamily: 'var(--font-classic)', color: 'var(--text)', marginBottom: '12px', fontSize: '16px' }}>The Action Enforcement Pattern</h4>
           <p style={{ color: 'var(--text-dim)', lineHeight: '1.7' }}>
             By requiring all mutations to happen inside exported functions in your state files, we ensure that every state change is <strong>deliberate</strong> and <strong>traceable</strong>. This creates a clean "Audit Log" of how your application's data evolves over time, making debugging significantly easier.
           </p>

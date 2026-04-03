@@ -56,12 +56,6 @@ export function engine(): Plugin {
       return null;
     },
 
-    config(): any {
-      return {
-        oxc: { jsx: "preserve" },
-      };
-    },
-
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         if (req.url?.startsWith("/__engine-ls")) {

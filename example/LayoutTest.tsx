@@ -18,6 +18,7 @@ export default function LayoutTest() {
         <div style={{ marginBottom: "40px" }}>
           <h3
             style={{
+              fontFamily: "var(--font-classic)",
               color: "var(--text)",
               marginBottom: "16px",
               fontSize: "20px",

@@ -4,7 +4,7 @@ import DemoPage from "./demo/DemoPage";
 export default function App() {
   return (
     <div>
-      <DemoPage />;
+      <DemoPage />
       {/* <ErrorDemo /> */}
     </div>
   );

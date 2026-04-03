@@ -83,28 +83,28 @@ export default function WhenDemo() {
         <div class="demo-section-label">Documentation</div>
         
         <div style={{ marginBottom: '60px' }}>
-          <h3 style={{ color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>1. whenever</h3>
+          <h3 style={{ fontFamily: 'var(--font-classic)', color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>1. whenever</h3>
           <p style={{ color: 'var(--text-dim)', lineHeight: '1.7', marginBottom: '16px' }}>
             <code>whenever</code> runs every time the condition changes. No dependency arrays. No <code>useEffect</code>. Just declare the condition and what to do.
           </p>
         </div>
 
         <div style={{ marginBottom: '60px' }}>
-          <h3 style={{ color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>2. when</h3>
+          <h3 style={{ fontFamily: 'var(--font-classic)', color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>2. when</h3>
           <p style={{ color: 'var(--text-dim)', lineHeight: '1.7', marginBottom: '16px' }}>
             <code>when</code> runs exactly once. When the condition first becomes true — it fires. Never again after that. Perfect for one-time initialization.
           </p>
         </div>
 
         <div style={{ marginBottom: '60px' }}>
-          <h3 style={{ color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>3. Advanced Logic</h3>
+          <h3 style={{ fontFamily: 'var(--font-classic)', color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>3. Advanced Logic</h3>
           <p style={{ color: 'var(--text-dim)', lineHeight: '1.7', marginBottom: '16px' }}>
             You can use complex conditions, including nested properties and array lengths. The engine will automatically track all reactive dependencies.
           </p>
         </div>
 
         <div style={{ marginBottom: '60px' }}>
-          <h3 style={{ color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>4. Lifecycle Hooks</h3>
+          <h3 style={{ fontFamily: 'var(--font-classic)', color: 'var(--text)', marginBottom: '16px', fontSize: '20px' }}>4. Lifecycle Hooks</h3>
           <p style={{ color: 'var(--text-dim)', lineHeight: '1.7', marginBottom: '16px' }}>
             Lifecycle is just <code>when</code> with engine constants like <code>Mount</code> and <code>Unmount</code>.
           </p>
