@@ -128,7 +128,7 @@ Zenitix features first-class async integration. `trackAsync` integrates any prom
 
 ### Layout System
 
-A powerful OOP-based layout system that integrates classes with reactivity. Define a `Layout` class, and its properties become fully tracked signals.
+A powerful OOP-based layout system that integrates classes with Zenitix JS Library. Define a `Layout` class, and its properties become fully tracked signals.
 
 ```ts
 export class DashboardLayout extends Layout {
@@ -190,7 +190,7 @@ The `compiler/` directory contains a high-performance Vite plugin (`plugin.ts`):
 
 ## Project Structure
 
-- `src/`: Core reactivity, DOM runtime, and internal utilities.
+- `src/`: Core Zenitix JS Library, DOM runtime, and internal utilities.
 - `compiler/`: Vite plugin and Babel transformation logic.
 - `example/`: The feature-rich demo dashboard showcasing all engine capabilities.
 
