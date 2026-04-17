@@ -35,6 +35,7 @@ Zenitix JS Library Engine is a **zero-dependency** Zenitix JS Library layer that
 - **State files** are plain `.state.ts` files; the compiler transforms `export let` into reactive signals transparently.
 - **Compiler-First**: Uses a custom Vite plugin powered by `oxc` and Babel for high-performance transformations.
 - **Unidirectional Data Flow**: Strict runtime protection against direct state mutation from components.
+- **Nested Routing**: Intuitive array-based route matching handling deep dynamic layouts effortlessly via `props.children`.
 
 ## Getting Started
 
@@ -147,11 +148,42 @@ export class DashboardLayout extends Layout {
 
 ### Router
 
-Client-side SPA routing with path parameters and query strings:
+Detailed client-side routing supporting layout nesting, dynamic parameters, and wildcard endpoints natively.
 
 ```ts
-registerRoute("/product/:id", ProductDetail);
-navigate("/product/42");
+import { registerRoutes, navigate, params } from "@engine/navigate";
+
+// 1. Define layouts and nested children
+registerRoutes([
+  {
+    path: "/dashboard",
+    component: DashboardLayout,
+    children: [
+      { path: "users", component: UserList },
+      { path: "users/:id/posts/:slug", component: UserPostProfile },
+      { path: "*", component: NotFound }
+    ]
+  }
+]);
+
+// 2. Dynamic parameters are instantly accessible
+function UserPostProfile() {
+  const { id, slug } = params();
+  return <p>Post: {slug} | User: {id}</p>;
+}
+
+// 3. Layout Resolution - automatically renders children
+function DashboardLayout(props: any) {
+  return (
+    <div class="dashboard">
+      <Sidebar />
+      <main>{props.children}</main>
+    </div>
+  );
+}
+
+// 4. Navigate programmatically
+navigate("/dashboard/users/42/posts/hello");
 ```
 
 ## Developer Experience

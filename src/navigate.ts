@@ -1,15 +1,24 @@
 import { mountComponent, unmountComponent } from "./component";
 import { engineError, engineWarn, engineInfo } from "./errors";
+import { h } from "./dom";
 
-interface Route {
+export interface RouteDef {
   path: string;
-  component: () => Node;
+  component: (props?: any) => Node;
+  children?: RouteDef[];
 }
 
-const routes: Route[] = [];
+export interface MatchedRoute {
+  route: RouteDef;
+  params: Record<string, string>;
+}
+
+const routes: RouteDef[] = [];
 let current = window.location.pathname;
 let container: Element | null = null;
 const ROOT = "router-root";
+
+let currentParams: Record<string, string> = {};
 
 export function setContainer(el: Element) {
   if (!el) {
@@ -25,30 +34,22 @@ export function setContainer(el: Element) {
   container = el;
 }
 
-export function registerRoute(path: string, component: () => Node) {
-  // warn — duplicate route
-  if (routes.find((r) => r.path === path)) {
-    engineWarn({
-      category: "Navigation",
-      what: `Route '${path}' is already registered.`,
-      why: "registerRoute() was called twice with the same path.",
-      fix: `Remove the duplicate registerRoute('${path}', ...) call.`,
-    });
-    return;
-  }
-
-  // warn — path does not start with /
+export function registerRoute(path: string, component: (props?: any) => Node) {
   if (!path.startsWith("/") && path !== "*") {
     engineWarn({
       category: "Navigation",
       what: `Route path '${path}' does not start with '/'.`,
-      why: "Route paths must be absolute.",
+      why: "Top-level route paths must be absolute.",
       fix: `Change '${path}' to '/${path}'.`,
     });
   }
-
   routes.push({ path, component });
   engineInfo("Navigation", `Route registered: ${path}`);
+}
+
+export function registerRoutes(newRoutes: RouteDef[]) {
+  routes.push(...newRoutes);
+  engineInfo("Navigation", `Registered ${newRoutes.length} top-level routes.`);
 }
 
 export function navigate(to: string | number) {
@@ -57,31 +58,24 @@ export function navigate(to: string | number) {
     return;
   }
 
-  // warn — no routes registered
   if (routes.length === 0) {
     engineWarn({
       category: "Navigation",
       what: `navigate('${to}') called but no routes are registered.`,
-      fix:
-        "Register routes before navigating.\n" +
-        '  registerRoute("/", Home)\n' +
-        '  registerRoute("/about", About)',
+      fix: "Register routes before navigating.",
     });
     return;
   }
 
-  // error — route does not exist
-  const matched = match(to);
+  const clean = to.split("?")[0];
+  const urlSegments = clean === "/" ? [] : clean.split("/").filter(Boolean);
+  const matched = matchRoutes(routes, urlSegments, {});
+
   if (!matched) {
-    const registered = routes.map((r) => `  ${r.path}`).join("\n");
     engineWarn({
       category: "Navigation",
       what: `No route registered for '${to}'.`,
-      why: "navigate() was called with a path that has not been registered.",
-      fix:
-        `Register the route or use an existing one.\n` +
-        `Registered routes:\n${registered}\n` +
-        `To add: registerRoute('${to}', YourComponent)`,
+      fix: `Register the route or ensure wildcard '*' exists.`,
     });
     return;
   }
@@ -98,15 +92,7 @@ export function route() {
 }
 
 export function params(): Record<string, string> {
-  const matched = match(current);
-  if (!matched) return {};
-  const rp = matched.path.split("/");
-  const pp = current.split("/");
-  const result: Record<string, string> = {};
-  rp.forEach((seg, i) => {
-    if (seg.startsWith(":")) result[seg.slice(1)] = pp[i];
-  });
-  return result;
+  return currentParams;
 }
 
 export function query(): Record<string, string> {
@@ -117,55 +103,106 @@ export function query(): Record<string, string> {
   return result;
 }
 
-function match(path: string): Route | null {
-  const clean = path.split("?")[0];
-  return (
-    routes.find((r) => r.path === clean) ??
-    routes.find((r) => {
-      const rp = r.path.split("/");
-      const pp = clean.split("/");
-      return (
-        rp.length === pp.length &&
-        rp.every((s, i) => s.startsWith(":") || s === pp[i])
-      );
-    }) ??
-    routes.find((r) => r.path === "*") ??
-    null
-  );
+function matchRoutes(
+  routeDefs: RouteDef[],
+  urlSegments: string[],
+  baseParams: Record<string, string>
+): MatchedRoute[] | null {
+  for (const r of routeDefs) {
+    if (r.path === "*") {
+      return [{ route: r, params: { ...baseParams } }];
+    }
+
+    const cleanPath = r.path.startsWith("/") ? r.path.slice(1) : r.path;
+    const rSegments = cleanPath === "" ? [] : cleanPath.split("/").filter(Boolean);
+    
+    let isMatch = true;
+    const newParams = { ...baseParams };
+
+    if (urlSegments.length < rSegments.length) {
+      isMatch = false;
+    } else {
+      for (let i = 0; i < rSegments.length; i++) {
+        const rs = rSegments[i];
+        const us = urlSegments[i];
+        if (rs.startsWith(":")) {
+          newParams[rs.slice(1)] = us;
+        } else if (rs !== us) {
+          isMatch = false;
+          break;
+        }
+      }
+    }
+
+    if (isMatch) {
+      const remainingSegments = urlSegments.slice(rSegments.length);
+      
+      if (remainingSegments.length === 0) {
+        if (r.children && r.children.length > 0) {
+          const indexMatch = matchRoutes(r.children, [], newParams);
+          if (indexMatch) {
+            return [{ route: r, params: newParams }, ...indexMatch];
+          }
+        }
+        return [{ route: r, params: newParams }];
+      } else {
+        if (r.children && r.children.length > 0) {
+          const childMatch = matchRoutes(r.children, remainingSegments, newParams);
+          if (childMatch) {
+             return [{ route: r, params: newParams }, ...childMatch];
+          }
+        }
+      }
+    }
+  }
+  
+  const wildcard = routeDefs.find(r => r.path === "*");
+  if (wildcard) {
+    return [{ route: wildcard, params: { ...baseParams } }];
+  }
+
+  return null;
 }
 
 export function renderRoute() {
-  // error — no container
   if (!container) {
     engineError({
       category: "Navigation",
       what: "renderRoute() called but no container is set.",
-      why: "setContainer() was never called.",
-      fix:
-        "Call setContainer() before renderRoute().\n" +
-        '  setContainer(document.getElementById("app")!)\n' +
-        "  renderRoute()",
+      fix: "Call setContainer() before renderRoute().",
     });
   }
 
-  const matched = match(current);
+  const clean = current.split("?")[0];
+  const urlSegments = clean === "/" ? [] : clean.split("/").filter(Boolean);
+  
+  const matched = matchRoutes(routes, urlSegments, {});
 
   if (!matched) {
-    const has404 = routes.find((r) => r.path === "*");
-    if (!has404) {
-      engineWarn({
-        category: "Navigation",
-        what: `No route matched '${current}' and no 404 route is registered.`,
-        fix:
-          `Register a wildcard route to handle unknown paths.\n` +
-          `  registerRoute('*', NotFound)`,
-      });
-    }
+    engineWarn({
+      category: "Navigation",
+      what: `No route matched '${current}' and no 404 wildcard is registered.`,
+      fix: `Register a wildcard route: registerRoute('*', NotFound)`,
+    });
     return;
   }
 
+  currentParams = matched.reduce((acc, m) => ({ ...acc, ...m.params }), {});
+
   unmountComponent(ROOT);
-  mountComponent(matched.component, container, ROOT);
+
+  mountComponent(() => {
+    let vNode: any = null;
+    for (let i = matched.length - 1; i >= 0; i--) {
+       const fn = matched[i].route.component;
+       if (vNode) {
+         vNode = h(fn, null, vNode);
+       } else {
+         vNode = h(fn, null);
+       }
+    }
+    return vNode;
+  }, container, ROOT);
 }
 
 window.addEventListener("popstate", () => {

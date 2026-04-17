@@ -18,6 +18,7 @@ import AsyncDemo from "./AsyncDemo";
 import StateDemo from "./StateDemo";
 import WhenDemo from "./WhenDemo";
 import LayoutTest from "../LayoutTest";
+import NestedRouterDemo from "./NestedRouterDemo";
 
 const modules = [
   { id: "signals", title: "Signals",       desc: "Atomic state primitives",   component: SignalsDemo },
@@ -33,6 +34,12 @@ const modules = [
     title: "Layout System",
     desc: "Class-based reactivity",
     component: LayoutTest,
+  },
+  {
+    id: "router",
+    title: "Nested Router",
+    desc: "Dynamic params & nesting",
+    component: NestedRouterDemo,
   },
 ];
 
