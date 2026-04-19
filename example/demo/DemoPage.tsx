@@ -19,6 +19,7 @@ import StateDemo from "./StateDemo";
 import WhenDemo from "./WhenDemo";
 import LayoutTest from "../LayoutTest";
 import NestedRouterDemo from "./NestedRouterDemo";
+import StoreDemo from "./StoreDemo";
 
 const modules = [
   { id: "signals", title: "Signals",       desc: "Atomic state primitives",   component: SignalsDemo },
@@ -41,6 +42,7 @@ const modules = [
     desc: "Dynamic params & nesting",
     component: NestedRouterDemo,
   },
+  { id: "store",   title: "Global Store",  desc: "Shared application state",  component: StoreDemo   },
 ];
 
 export default function DemoPage() {

@@ -98,6 +98,44 @@ export default function Counter() {
 
 **State Guard:** Any mutation of state variables from _outside_ the state file is blocked at runtime, ensuring your business logic stays in your state files.
 
+### Global State Management
+
+Sometimes you don't want to use standard state files and instead want a more dynamic, unified store similar to React's Context+Reducer or SolidJS stores. The `createStore` function provides exactly this wrapper, offering fine-grained reactivity over an object without requiring explicit signals or exports for every property.
+
+**Why it is useful:** It allows you to colocate complex UI states (like user session, layout configurations, notifications) into one globally accessible reactive object, avoiding prop drilling and boilerplate.
+
+**How to use it:**
+
+```ts
+import { createStore } from "@engine/index";
+
+export const globalStore = createStore({
+  count: 0,
+  user: null as { name: string; role: string } | null,
+});
+```
+
+Components can then consume it directly. You can update state using immediate mutation or the functional `.setState(...)` helper:
+
+```tsx
+import { globalStore } from "./store";
+
+export function Counter() {
+  return (
+    <div>
+      <p>Count: {() => globalStore.count}</p>
+      {/* Update via direct mutation */}
+      <button onClick={() => globalStore.count++}>+1</button>
+      
+      {/* Update via functional helper */}
+      <button onClick={() => globalStore.setState(prev => ({ count: prev.count + 1 }))}>
+        +1 (Fn)
+      </button>
+    </div>
+  );
+}
+```
+
 ### Effects & Lifecycle
 
 Effects run immediately and re-run whenever a signal they read changes.
