@@ -20,6 +20,7 @@ import WhenDemo from "./WhenDemo";
 import LayoutTest from "../LayoutTest";
 import NestedRouterDemo from "./NestedRouterDemo";
 import StoreDemo from "./StoreDemo";
+import FormDemo from "./FormDemo";
 
 const modules = [
   { id: "signals", title: "Signals",       desc: "Atomic state primitives",   component: SignalsDemo },
@@ -43,6 +44,7 @@ const modules = [
     component: NestedRouterDemo,
   },
   { id: "store",   title: "Global Store",  desc: "Shared application state",  component: StoreDemo   },
+  { id: "form",    title: "Form Handling", desc: "Reactive form validation",  component: FormDemo    },
 ];
 
 export default function DemoPage() {

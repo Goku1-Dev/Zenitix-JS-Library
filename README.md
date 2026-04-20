@@ -136,6 +136,50 @@ export function Counter() {
 }
 ```
 
+### Form Handling Management
+
+Building on top of `createStore`, Zenitix provides a native `createForm` utility for robust, fine-grained reactive form states and validation. It handles values, touched tracking, and error messaging seamlessly.
+
+**Why it is useful:** Instead of manually binding `onInput` and building your own error tracking maps, `createForm` provides a structured, reactive wrapper that updates inputs instantly without causing unnecessary re-renders.
+
+**How to use it:**
+
+```tsx
+import { createForm } from "@engine/index";
+
+export function RegistrationForm() {
+  const form = createForm({
+    initialValues: { username: "", email: "" },
+    validate: (values) => {
+      const errors = {};
+      if (!values.username) errors.username = "Required";
+      return errors;
+    }
+  });
+
+  const onSubmit = (values) => {
+    console.log("Submitting:", values);
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <input 
+        name="username" 
+        value={() => form.values.username}
+        onInput={form.handleChange}
+        onBlur={form.handleBlur}
+      />
+      {() => form.touched.username && form.errors.username && (
+        <span>{form.errors.username}</span>
+      )}
+      <button type="submit" disabled={() => form.isSubmitting.value}>
+        Submit
+      </button>
+    </form>
+  );
+}
+```
+
 ### Effects & Lifecycle
 
 Effects run immediately and re-run whenever a signal they read changes.
